@@ -3,33 +3,35 @@ from werkzeug.utils import secure_filename
 import os
 from forms.index_form import FullForm
 import time
+import keras
+from core import core
 
+"""
+def init():
+    global modelVGG16
+    modelVGG16 = keras.applications.vgg16.VGG16(weights="imagenet")
+    global modelResNet50
+    modelResNet50 = keras.applications.resnet50.ResNet50(weights="imagenet")
+"""
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "1234" #since it's local, i dont care for security, i only have it because it's needed
 app.config['UPLOAD_FOLDER'] = 'static/files'
 app.config['RESULT_FOLDER'] = 'static/files/results'
+app.config['vgg16']= keras.applications.vgg16.VGG16(weights="imagenet")
+app.config['resnet50']= keras.applications.resnet50.ResNet50(weights="imagenet")
 
 
 @app.route('/',methods=('GET','POST'))
 def index():
     form = FullForm()
     if request.method=='POST':
-        print(request.form)
-        print(form.validate_on_submit())
         if form.validate_on_submit():
-            print("*********************")
-            print(request)
-            print("+++++++++++++++++++++")
-            print(request.values)
-            print("---------------------")
-            print(request.form)
-            print("/////////////////////")
             file = request.files["file-file"] #grab the file
-            information = preprocesor(request.form,file.filename)
+            configurationCore = preprocesor(request.form,file.filename)
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) #save the file
             #return "file has been uploaded."
-            time.sleep(3)
+            core(configurationCore)
             flash("Procesamiento completado, imagenes guardadas en la carpeta "+app.config['RESULT_FOLDER'])
             return redirect("/",code=302)
         
@@ -41,7 +43,7 @@ def preprocesor(multiDict,filename):
     keys = multiDict.keys() #the keys to later check for the checkboxes
     config = {} #start the dictionary with all the info for the program
     config["models"]=nets
-    config["visualizers"]=[]
+    config["visualizers"]={}
     config["filename"]=filename
     for key in keys:    #iterate the keys
         match key:  #search for the checkboxes and configure each visualization model accordingly
@@ -49,17 +51,17 @@ def preprocesor(multiDict,filename):
                 shap={}
                 shap["evals"]=multiDict.get("shap-SHAP_evals")
                 shap["batch_size"]=multiDict.get("shap-SHAP_batch_size")
-                config["visualizers"].append({"shap":shap})
+                config["visualizers"]["shap"]=shap
             case 'check-LIME':
                 lime={}
                 lime["perturbations"]=multiDict.get("lime-LIME_perturbations")
                 lime["kernel_size"]=multiDict.get("lime-LIME_kernel_size")
                 lime["max_dist"]=multiDict.get("lime-LIME_max_dist")
                 lime["ratio"]=multiDict.get("lime-LIME_ratio")
-                config["visualizers"].append({"lime":lime})
+                config["visualizers"]["lime"]=lime
             case 'check-GradCAM':
                 gradCAM={}
-                config["visualizers"].append({"gradCAM":gradCAM})
+                config["visualizers"]["gradCAM"]=gradCAM
     return config
 
 if __name__ == "__main__":

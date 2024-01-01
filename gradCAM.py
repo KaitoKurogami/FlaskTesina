@@ -1,24 +1,17 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
 # Display
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 import matplotlib as mpl
 mpl.rcParams['figure.figsize'] = (6, 6)
 #para que elimine las lineas de los ejes deberia de cambiar cada uno a False por separado
 plt.axis('off')
 import cv2
-"""
-
-"""
-
 
 image_path = "./tesina-imagenes/"
 img_base_path = image_path + "1002.jpg"
 
 def GRADCAM(model, last_conv_layer,image,scale,preprocessor, decoder, savefile_path):
-  from IPython.display import Image, display
   from scipy.ndimage import zoom
 
   def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
@@ -89,12 +82,13 @@ def GRADCAM(model, last_conv_layer,image,scale,preprocessor, decoder, savefile_p
   # Remove last layer's softmax
   model.layers[-1].activation = None
   # Generate class activation heatmap
-  heatmap = make_gradcam_heatmap(X, model, last_conv_layer_name)
+  heatmap = make_gradcam_heatmap(X, model, last_conv_layer)
 
   # Display heatmap
   #plt.matshow(heatmap)
   #plt.show()
 
+  """
   def save_and_display_gradcam(img_path, heatmap, cam_path="cam.jpg", alpha=0.5):
       # Load the original image
       img = keras.utils.load_img(img_path)
@@ -124,6 +118,7 @@ def GRADCAM(model, last_conv_layer,image,scale,preprocessor, decoder, savefile_p
 
       # Display Grad CAM
       display(Image(cam_path))
+  """
 
   plt.figure(figsize=(12, 6))
   a = plt.imshow(img)
@@ -145,9 +140,10 @@ elif seleccion == 2:
 else:
   print("elegir 1 o 2")
 
-image_path = "./static/files/results"
+"""image_path = "./static/files/results"
 for name in namelistImagenet:
   img_base_path = image_path + name
   ubicacion="imagenet/GRADCAMRes"+name
   #GRADCAM(tf.keras.applications.VGG16(weights="imagenet"),"block5_conv3",img_base_path,224/14,preprocess_input,decode_predictions, ubicacion)
   GRADCAM(tf.keras.applications.ResNet50(weights="imagenet"),last_conv_layer_name,img_base_path,scale,preprocess_input,decode_predictions, ubicacion)
+  """

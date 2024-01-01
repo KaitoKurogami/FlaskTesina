@@ -1,8 +1,5 @@
 import json
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
-#from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input,decode_predictions
 import shap
 import copy
 # Display
@@ -34,7 +31,7 @@ def SHAP(model,image,preprocessor,decoder, savefile_path ,SHAP_max_evals=1000,SH
 
   preds = model.predict(X,verbose=0)
   #print("Predicted:", decode_predictions(preds, top=1)[0])
-  result = decode_predictions(preds)
+  result = decoder(preds)
   for res in result[0]:
     print(res)
 
@@ -60,6 +57,7 @@ def SHAP(model,image,preprocessor,decoder, savefile_path ,SHAP_max_evals=1000,SH
   plt.clf()
   #return(f)
 
+"""
 image_path = "./tesina-imagenes/"
 #namelist=["EntleBucher.jpg","dutch.jpg","Macaw.jpg","Maze.jpg","forklift.jpg","toucan.jpg","weasel.jpg"]
 #namelist=["abacus.jpg","baseball.jpg","dumbbell.jpg","microphone.jpg","tostadora2.jpg"]
@@ -68,3 +66,4 @@ for name in namelist:
   img_base_path = image_path + name
   ubicacion="resultados/random/"+"SHAPRes"+name
   SHAP(tf.keras.applications.ResNet50(weights="imagenet"),img_base_path,preprocess_input,decode_predictions, ubicacion ,SHAP_max_evals=1000)
+"""

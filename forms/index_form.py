@@ -36,7 +36,7 @@ class UploadFileForm(FlaskForm):
     #submit = SubmitField("Confirm File")
 
 class SHAPForm(FlaskForm):
-    SHAP_evals=IntegerField("SHAP_evals",default=1000, validators=[DataRequired()],render_kw={'disabled':'true'})
+    SHAP_evals=IntegerField("SHAP_evals",description="1000 por defecto",default=1000, validators=[DataRequired()],render_kw={'disabled':'true'})
     SHAP_batch_size=IntegerField("Shap_bnatch_size", validators=[DataRequired()],default=50,render_kw={'disabled':'true'})
     
 class LIMEForm(FlaskForm):
