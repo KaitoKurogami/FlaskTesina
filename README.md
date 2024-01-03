@@ -10,10 +10,10 @@ conda env create --name envname --file=environments.yml
 
 para iniciar el entorno utilizar
 ```
-conda activate ./envname
+conda activate envname
 ```
 
-para ejecutar el programa, dentro del entorno
+para ejecutar el programa, dentro del entorno utilizar
 ```
 python app.py
 ```
