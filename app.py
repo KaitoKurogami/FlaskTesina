@@ -3,23 +3,18 @@ from werkzeug.utils import secure_filename
 import os
 from forms.index_form import FullForm
 import time
-import keras
 from core import core
 
-"""
-def init():
-    global modelVGG16
-    modelVGG16 = keras.applications.vgg16.VGG16(weights="imagenet")
-    global modelResNet50
-    modelResNet50 = keras.applications.resnet50.ResNet50(weights="imagenet")
-"""
+import tensorflow as tf
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "1234" #since it's local, i dont care for security, i only have it because it's needed
 app.config['UPLOAD_FOLDER'] = 'static/files'
 app.config['RESULT_FOLDER'] = 'static/files/results'
-app.config['vgg16']= keras.applications.vgg16.VGG16(weights="imagenet")
-app.config['resnet50']= keras.applications.resnet50.ResNet50(weights="imagenet")
+app.config['vgg16']= tf.keras.applications.vgg16.VGG16(weights="imagenet")
+app.config['resnet50']= tf.keras.applications.resnet50.ResNet50(weights="imagenet")
 
 
 @app.route('/',methods=('GET','POST'))

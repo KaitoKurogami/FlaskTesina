@@ -1,5 +1,5 @@
-from keras.applications.resnet50 import preprocess_input as ResNet50preprocess_input, decode_predictions as ResNet50decode_predictions
-from keras.applications.vgg16 import preprocess_input as vgg16preprocess_input, decode_predictions as vgg16decode_predictions
+from tensorflow.keras.applications.resnet50 import preprocess_input as ResNet50preprocess_input, decode_predictions as ResNet50decode_predictions
+from tensorflow.keras.applications.vgg16 import preprocess_input as vgg16preprocess_input, decode_predictions as vgg16decode_predictions
 from flask import current_app as app
 from gradCAM import GRADCAM
 from LIME import LIME
@@ -27,26 +27,27 @@ def core(config):
                 CNNs["ResNet50"]["last_conv_layer_name"]="conv5_block3_out"
                 CNNs["ResNet50"]["scale"]=224 / 7
     for model in config["models"]:
+        print("*************")
+        print("model: "+model)
+        print("*************")
         for method in config["visualizers"].keys():
+            print("*************")
+            print("method: "+method)
+            print("*************")
             match method:
                 case 'shap':
-                    print(vgg16preprocess_input)
-                    print(type(vgg16preprocess_input))
-                    print("///////////")
-                    print(CNNs[model]["preprocess_input"])
-                    print(type(CNNs[model]["preprocess_input"]))
-                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename("SHAP"+config["filename"]))
+                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename(model+method+config["filename"]))
                     SHAP(CNNs[model]["model"],image_address,CNNs[model]["preprocess_input"],\
                          CNNs[model]["decode_predictions"], save_path ,\
                          int(config["visualizers"][method]["evals"]),int(config["visualizers"][method]["batch_size"]))
                 case 'lime':
-                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename("LIME"+config["filename"]))
+                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename(model+method+config["filename"]))
                     LIME(CNNs[model]["model"],image_address,CNNs[model]["preprocess_input"],\
                          CNNs[model]["decode_predictions"], save_path ,\
                          int(config["visualizers"][method]["perturbations"]),float(config["visualizers"][method]["kernel_size"]),\
                          float(config["visualizers"][method]["max_dist"]), float(config["visualizers"][method]["ratio"]))
                 case 'gradCAM':
-                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename("GradCAM"+config["filename"]))
+                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename(model+method+config["filename"]))
                     GRADCAM(CNNs[model]["model"], CNNs[model]["last_conv_layer_name"],image_address,\
                             float(CNNs[model]["scale"]),CNNs[model]["preprocess_input"],\
                             CNNs[model]["decode_predictions"], save_path)

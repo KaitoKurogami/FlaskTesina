@@ -1,0 +1,9 @@
+click @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/click_1699473800648/work
+colorama @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/colorama_1699472650914/work
+Flask @ file:///C:/b/abs_efc024w7fv/croot/flask_1702980041157/work
+itsdangerous @ file:///tmp/build/80754af9/itsdangerous_1621432558163/work
+Jinja2 @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/jinja2_1699476363736/work
+MarkupSafe @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/markupsafe_1699475011847/work
+setuptools==68.2.2
+Werkzeug @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/werkzeug_1699480200943/work
+wheel==0.41.2
