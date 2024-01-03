@@ -54,6 +54,7 @@ dependencies:
   - opencv=4.6.0=py310ha36de5b_5
   - openssl=1.1.1w=hcfcfb64_0
   - pcre=8.45=h0e60522_0
+  - pip=23.3.1
   - python=3.10.13=h966fe2a_0
   - qt-main=5.15.2=h6072711_9
   - qt-webengine=5.15.9=h5bd16bc_7
