@@ -1,10 +1,5 @@
-import tensorflow as tf
 import numpy as np
 import copy
-from tensorflow import keras
-#from keras.applications.imagenet_utils import decode_predictions
-from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
-#from keras.applications.vgg16 import preprocess_input,decode_predictions
 import skimage.io
 import skimage.segmentation
 import copy
@@ -125,6 +120,7 @@ def LIME(model,image,preprocessor, decoder, savefile_path, LIME_num_perturb,LIME
   print("image saved at: "+savefile_path)
 
 
+"""
 image_path = "./tesina-imagenes/random/"
 #namelist=["EntleBucher.jpg","dutch.jpg","Macaw.jpg","Maze.jpg","forklift.jpg","toucan.jpg","weasel.jpg"]
 namelist=["abacus.jpg","baseball.jpg","dumbbell.jpg","microphone.jpg","tostadora2.jpg"]
@@ -133,3 +129,4 @@ for name in namelist:
   img_base_path = image_path + name
   ubicacion="Resultados/random/"+"LIMERes"+name
   LIME(tf.keras.applications.ResNet50(weights="imagenet"),img_base_path,preprocess_input,decode_predictions, ubicacion,1000,LIME_max_dist=224/8)
+"""

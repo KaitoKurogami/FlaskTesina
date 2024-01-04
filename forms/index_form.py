@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField, widgets,SelectMultipleField,IntegerField,FormField, DecimalField
 from wtforms.validators import InputRequired, DataRequired
+from flask_wtf.file import FileAllowed
 import decimal
 
 class BetterDecimalField(DecimalField):
@@ -32,12 +33,12 @@ class BetterDecimalField(DecimalField):
                 raise ValueError(self.gettext('Not a valid decimal value'))
 
 class UploadFileForm(FlaskForm):
-    file = FileField(label="File", validators=[InputRequired()])
+    file = FileField(label="File", validators=[InputRequired(),FileAllowed(['jpg', 'jpeg', 'png','webp'])])
     #submit = SubmitField("Confirm File")
 
 class SHAPForm(FlaskForm):
-    SHAP_evals=IntegerField("SHAP_evals",default=1000, validators=[DataRequired()],render_kw={'disabled':'true'})
-    SHAP_batch_size=IntegerField("Shap_bnatch_size", validators=[DataRequired()],default=50,render_kw={'disabled':'true'})
+    SHAP_evals=IntegerField("SHAP_evals",description="1000 por defecto",default=1000, validators=[DataRequired()],render_kw={'disabled':'true'})
+    SHAP_batch_size=IntegerField("Shap_bnatch_size", validators=[DataRequired()],default=10,render_kw={'disabled':'true'})
     
 class LIMEForm(FlaskForm):
     LIME_perturbations=IntegerField("LIME_perturbations",default=500, validators=[DataRequired()],render_kw={'disabled':'true'})

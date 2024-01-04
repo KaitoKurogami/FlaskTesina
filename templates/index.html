@@ -10,7 +10,7 @@
     <form method='POST' enctype="multipart/form-data" id="fullForm" onSubmit="showProcessing()">
         {{form.hidden_tag()}}
         <h2>Imagen a procesar</h2>
-        <p>Obligatoria</p>
+        <p>Obligatoria, solo archivos  'jpeg', 'jpg', 'png' o 'webp'</p>
         {{form.file()}}
         <h2>Redes neuronales</h2>
         <p>Elija al menos una</p>
@@ -19,19 +19,19 @@
         <p>Elija al menos uno</p>
         <label for="toggleCheckbox">SHAP</label>
         <input name="check-SHAP" value="0" type="checkbox" id="toggleCheckboxSHAP" class="checkbox">
-        <div id="hiddenFormSHAP" style="display:none;">
+        <div id="hiddenFormSHAP">
             {{form.shap()}}
         </div><br>
         
         <label for="toggleCheckbox">LIME</label>
         <input name="check-LIME" value="0" type="checkbox" id="toggleCheckboxLIME" class="checkbox">
-        <div id="hiddenFormLIME" style="display:none;">
+        <div id="hiddenFormLIME">
             {{form.lime()}}
         </div><br>
         
         <label for="toggleCheckbox">Grad-CAM</label>
         <input name="check-GradCAM" value="0" type="checkbox" id="toggleCheckboxGradCAM" class="checkbox">
-        <div id="hiddenFormGradCAM" style="display:none;">
+        <div id="hiddenFormGradCAM">
             <h4>Grad-CAM no tiene parametros modificables, con seleccionarlo alcanza</h4>
         </div><br>
         {{form.submit()}}
@@ -44,7 +44,7 @@
     
     document.getElementById('toggleCheckboxSHAP').addEventListener('change', function () {
         var hiddenForm = document.getElementById('hiddenFormSHAP');
-        hiddenForm.style.display = this.checked ? 'block' : 'none';
+       
         inputFields=hiddenForm.getElementsByTagName('input');
         for (var i = 0; i < inputFields.length; i++){
             inputFields[i].disabled=!this.checked;
@@ -52,7 +52,7 @@
     });
     document.getElementById('toggleCheckboxLIME').addEventListener('change', function () {
         var hiddenForm = document.getElementById('hiddenFormLIME');
-        hiddenForm.style.display = this.checked ? 'block' : 'none';
+        
         inputFields=hiddenForm.getElementsByTagName('input');
         for (var i = 0; i < inputFields.length; i++){
             inputFields[i].disabled=!this.checked;
@@ -60,7 +60,7 @@
     });
     document.getElementById('toggleCheckboxGradCAM').addEventListener('change', function () {
         var hiddenForm = document.getElementById('hiddenFormGradCAM');
-        hiddenForm.style.display = this.checked ? 'block' : 'none';
+        
         inputFields=hiddenForm.getElementsByTagName('input');
         for (var i = 0; i < inputFields.length; i++){
             inputFields[i].disabled=!this.checked;
