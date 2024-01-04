@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField, widgets,SelectMultipleField,IntegerField,FormField, DecimalField
 from wtforms.validators import InputRequired, DataRequired
+from flask_wtf.file import FileAllowed
 import decimal
 
 class BetterDecimalField(DecimalField):
@@ -32,7 +33,7 @@ class BetterDecimalField(DecimalField):
                 raise ValueError(self.gettext('Not a valid decimal value'))
 
 class UploadFileForm(FlaskForm):
-    file = FileField(label="File", validators=[InputRequired()])
+    file = FileField(label="File", validators=[InputRequired(),FileAllowed(['jpg', 'jpeg', 'png','webp'])])
     #submit = SubmitField("Confirm File")
 
 class SHAPForm(FlaskForm):
