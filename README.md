@@ -7,7 +7,7 @@ para crear el entorno utilizar
 ```
 conda env create --name envname --file=environments.yml
 ```
-y agregar ```--prefix PATH``` para que el entorno se cree en el ```PATH``` especificado
+o utilizar ```--prefix PATH``` en vez de ```--name envname``` para que el entorno se cree en el ```PATH``` especificado
 
 para iniciar el entorno utilizar
 ```
