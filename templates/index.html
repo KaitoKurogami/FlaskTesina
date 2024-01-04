@@ -10,7 +10,7 @@
     <form method='POST' enctype="multipart/form-data" id="fullForm" onSubmit="showProcessing()">
         {{form.hidden_tag()}}
         <h2>Imagen a procesar</h2>
-        <p>Obligatoria</p>
+        <p>Obligatoria, solo archivos  'jpeg', 'jpg', 'png' o 'webp'</p>
         {{form.file()}}
         <h2>Redes neuronales</h2>
         <p>Elija al menos una</p>
