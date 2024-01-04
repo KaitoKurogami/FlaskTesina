@@ -5,6 +5,23 @@ from forms.index_form import FullForm
 import time
 from core import core
 
+try:
+   os.makedirs("./static/files")
+except FileExistsError:
+   # directory already exists
+   pass
+
+
+try:
+   os.makedirs("./static/files/results")
+except FileExistsError:
+   # directory already exists
+   pass
+
+#for some reason, conda couldn find the SSL certificate in a new VM, if you dont have this problems, just comment the next to lines to feel safer
+import ssl
+ssl.create_default_https_context = ssl._create_unverified_context
+
 import tensorflow as tf
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
