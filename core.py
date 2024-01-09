@@ -8,9 +8,10 @@ import os
 from werkzeug.utils import secure_filename
 
 def core(config):
+    #make the image address to tell the CNNs where to find it
     image_address=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(config["filename"]))
     CNNs={}
-    for model in config["models"]:
+    for model in config["models"]: #iterate for each CNN model and make te configuration required
         match model:
             case "VGG16":
                 CNNs["VGG16"]={}
@@ -26,11 +27,13 @@ def core(config):
                 CNNs["ResNet50"]["decode_predictions"]=ResNet50decode_predictions
                 CNNs["ResNet50"]["last_conv_layer_name"]="conv5_block3_out"
                 CNNs["ResNet50"]["scale"]=224 / 7
+    #here it iterates for each model
+    #then it iterates for each visualization method, so first you process VGG wqith every method, then ResNet with everry method, etc.
     for model in config["models"]:
         print("*************")
         print("model: "+model)
         print("*************")
-        for method in config["visualizers"].keys():
+        for method in config["visualizers"].keys(): #checks which method was selected and calls the function with the needed data
             print("*************")
             print("method: "+method)
             print("*************")
