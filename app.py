@@ -27,7 +27,7 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = "1234" #since it's local, i dont care for security, i only have it because it's needed
+app.config['SECRET_KEY'] = "cbfbd8c99f134afa075d13b655662ed09d3fa29c46a09cd55ad37e3380a93a0e" #since it's local, i dont care for security, i only have it because it's needed
 app.config['UPLOAD_FOLDER'] = 'static/files'
 app.config['RESULT_FOLDER'] = 'static/files/results'
 app.config['vgg16']= tf.keras.applications.vgg16.VGG16(weights="imagenet")
@@ -40,9 +40,8 @@ def index():
     if request.method=='POST':
         if form.validate_on_submit():
             file = request.files["file-file"] #grab the file
-            configurationCore = preprocesor(request.form,file.filename)
+            configurationCore = preprocesor(request.form,file.filename) #create te dictionary with the configuration for the app
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) #save the file
-            #return "file has been uploaded."
             core(configurationCore)
             flash("Procesamiento completado, imagenes guardadas en la carpeta "+app.config['RESULT_FOLDER'])
             return redirect("/",code=302)
@@ -50,7 +49,6 @@ def index():
     return render_template('index.html',form=form)
 
 def preprocesor(multiDict,filename):
-    upload_adress=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(filename))
     nets = multiDict.getlist('nets')    #list of CNNs to use
     keys = multiDict.keys() #the keys to later check for the checkboxes
     config = {} #start the dictionary with all the info for the program
