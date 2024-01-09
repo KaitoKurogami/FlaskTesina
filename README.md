@@ -14,6 +14,11 @@ para iniciar el entorno utilizar
 conda activate envname
 ```
 
+de manera similar, para salir del entorno utilizar
+```
+conda deactivate
+```
+
 para ejecutar el programa, dentro del entorno utilizar
 ```
 python app.py
