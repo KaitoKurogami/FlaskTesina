@@ -13,6 +13,11 @@ para iniciar el entorno utilizar
 ```
 conda activate envname
 ```
+o en el caso de crear el entorno en un ```PATH``` indicado manualmente, utilizar
+```
+conda activate PATH
+```
+ya que al no estar instalado en el sitio por defecto, conda no encontraria el entorno solo por su nombre
 
 de manera similar, para salir del entorno utilizar
 ```
@@ -24,5 +29,6 @@ para ejecutar el programa, dentro del entorno utilizar
 python app.py
 ```
 
-con lo que es posible acceder a 127.0.0.1:5000 (localhost en el puerto 5000) para tener una interfaz grafica y poder analizar las imagenes
-en la consola se muestra informacion como la clasificacion en si o el tiempo restante
+con lo que es posible acceder a 127.0.0.1:5000 (localhost en el puerto 5000) para tener una interfaz grafica y poder analizar las imagenes.
+
+En la consola se muestra informacion como la clasificacion en si o el tiempo restante
