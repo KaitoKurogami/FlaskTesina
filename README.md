@@ -5,19 +5,21 @@ Hace falta tener instalado miniconda y una GPU de Nvidia (en caso contrario, deb
 
 para crear el entorno utilizar
 ```
-conda env create --name envname --file=environments.yml
+%USERPROFILE%\miniconda3\condabin\conda env create --name envname --file=environment.yml
 ```
 o utilizar ```--prefix PATH``` en vez de ```--name envname``` para que el entorno se cree en el ```PATH``` especificado
 
 para iniciar el entorno utilizar
 ```
-conda activate envname
+%USERPROFILE%\miniconda3\condabin\conda activate envname
 ```
 o en el caso de crear el entorno en un ```PATH``` indicado manualmente, utilizar
 ```
-conda activate PATH
+%USERPROFILE%\miniconda3\condabin\conda activate PATH
 ```
 ya que al no estar instalado en el sitio por defecto, conda no encontraria el entorno solo por su nombre
+En caso de haber configurado durante la instalacion de miniconda para agregar miniconda a la variable de entorno PATH, es posible reemplazar ```%USERPROFILE%\miniconda3\condabin\conda``` por simplemente ```conda```
+
 
 de manera similar, para salir del entorno utilizar
 ```
