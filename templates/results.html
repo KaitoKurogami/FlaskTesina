@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<div class="content" >
+    <h1>Resultados</h1>
+    <table id="listWithHandle">
+        <tr>
+            <th>Archivo: red-metodo-imagen</th>
+            <th>Imagen</th>
+        </tr>
+        {% for image in images %}
+        <tr>
+            <td>{{ image }}</td>
+            <td><img src="{{ url_for('static', filename='files/results/{}'.format(image) ) }}" class="image" /></td>
+        </tr>
+        {% endfor %}
+    </table>
+  
+    <div>
+        <button>
+            <a href="{{url_for('index')}}">Volver</a></button>
+    </div>
+
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
+{% endblock %}
