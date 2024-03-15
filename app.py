@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect,flash,session
+from flask import Flask, render_template, request,redirect,flash,session,url_for
 from werkzeug.utils import secure_filename
 import os
 from forms.index_form import FullForm
@@ -42,11 +42,19 @@ def index():
             file = request.files["file-file"] #grab the file
             configurationCore = preprocesor(request.form,file.filename) #create te dictionary with the configuration for the app
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) #save the file
-            core(configurationCore)
+            filenames=core(configurationCore)
+            session['filenames']=filenames
             flash("Procesamiento completado, imagenes guardadas en la carpeta "+app.config['RESULT_FOLDER'])
-            return redirect("/",code=302)
+            return redirect('/results')
         
     return render_template('index.html',form=form)
+
+@app.route('/results')
+def results():
+    images=session['filenames']
+    print(images)
+    session.pop('filenames',default=None)
+    return render_template('results.html',images=images)
 
 def preprocesor(multiDict,filename):
     nets = multiDict.getlist('nets')    #list of CNNs to use
