@@ -8,7 +8,6 @@ import sklearn.metrics
 from sklearn.linear_model import LinearRegression
 import warnings
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 from tqdm import tqdm
 from PIL import Image
 
@@ -31,6 +30,7 @@ def LIME(model,image,preprocessor, decoder, savefile_path, LIME_num_perturb,LIME
   num_perturb=LIME_num_perturb
 
   decode_predictions=decoder
+  warnings.filterwarnings("ignore")
 
 #preprocess image, data from cv2 is to be processed by the CNN
   img = image
@@ -40,7 +40,7 @@ def LIME(model,image,preprocessor, decoder, savefile_path, LIME_num_perturb,LIME
 
   Xi=copy.deepcopy(img)
 
-#images from skimage are to make te superpixels and to show results graphically
+#images from skimage are to make the superpixels
   X2 = skimage.io.imread(image)
   X2 = skimage.transform.resize(X2, (224,224))
 
@@ -119,14 +119,3 @@ def LIME(model,image,preprocessor, decoder, savefile_path, LIME_num_perturb,LIME
 
   print("image saved at: "+savefile_path)
 
-
-"""
-image_path = "./tesina-imagenes/random/"
-#namelist=["EntleBucher.jpg","dutch.jpg","Macaw.jpg","Maze.jpg","forklift.jpg","toucan.jpg","weasel.jpg"]
-namelist=["abacus.jpg","baseball.jpg","dumbbell.jpg","microphone.jpg","tostadora2.jpg"]
-#namelist=["abacus.jpg"]
-for name in namelist:
-  img_base_path = image_path + name
-  ubicacion="Resultados/random/"+"LIMERes"+name
-  LIME(tf.keras.applications.ResNet50(weights="imagenet"),img_base_path,preprocess_input,decode_predictions, ubicacion,1000,LIME_max_dist=224/8)
-"""

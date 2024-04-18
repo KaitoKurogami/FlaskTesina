@@ -59,4 +59,4 @@ class FullForm(FlaskForm):
     file = FormField(UploadFileForm)
     shap = FormField(SHAPForm)
     lime = FormField(LIMEForm)
-    submit=SubmitField(label="SubmitButton",render_kw={'disabled':'true'})
+    submit=SubmitField(label="Procesar Imagen",render_kw={'disabled':'true'})

@@ -14,7 +14,7 @@
         </tr>
         {% for image in images %}
         <tr>
-            <td>{{ image }}</td>
+            <td>{{ image[20:] }}</td>
             <td><img src="{{ url_for('static', filename='files/results/{}'.format(image) ) }}" class="image" /></td>
         </tr>
         {% endfor %}

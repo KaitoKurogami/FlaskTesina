@@ -18,7 +18,7 @@ except FileExistsError:
    # directory already exists
    pass
 
-#for some reason, conda couldn find the SSL certificate in a new VM, if you dont have this problems, just comment the next to lines to feel safer
+#for some reason, conda couldn find the SSL certificate in a new VM, if you dont have this problem, just comment the next to lines to feel safer
 import ssl
 ssl.create_default_https_context = ssl._create_unverified_context
 
@@ -52,7 +52,6 @@ def index():
 @app.route('/results')
 def results():
     images=session['filenames']
-    print(images)
     session.pop('filenames',default=None)
     return render_template('results.html',images=images)
 
