@@ -4,15 +4,18 @@ from flask import current_app as app
 from gradCAM import GRADCAM
 from LIME import LIME
 from SHAP import SHAP
+from runNet import runNet
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 def core(config):
+    now = datetime.now()
     #make the image address to tell the CNNs where to find it
     filenames=[]
     image_address=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(config["filename"]))
     CNNs={}
-    for model in config["models"]: #iterate for each CNN model and make te configuration required
+    for model in config["models"]: #iterate for each CNN model and make the configuration required
         match model:
             case "VGG16":
                 CNNs["VGG16"]={}
@@ -34,27 +37,29 @@ def core(config):
         print("*************")
         print("model: "+model)
         print("*************")
+        runNet(CNNs[model]["model"],image_address,CNNs[model]["preprocess_input"],CNNs[model]["decode_predictions"])
         for method in config["visualizers"].keys(): #checks which method was selected and calls the function with the needed data
             print("*************")
             print("method: "+method)
             print("*************")
+            filename=secure_filename(now.strftime("%Y-%m-%d_%H-%M-%S-")+model+"-"+method+"-"+config["filename"])
             match method:
                 case 'shap':
-                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename(model+"-"+method+"-"+config["filename"]))
+                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],filename)
                     SHAP(CNNs[model]["model"],image_address,CNNs[model]["preprocess_input"],\
                          CNNs[model]["decode_predictions"], save_path ,\
                          int(config["visualizers"][method]["evals"]),int(config["visualizers"][method]["batch_size"]))
                 case 'lime':
-                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename(model+"-"+method+"-"+config["filename"]))
+                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],filename)
                     LIME(CNNs[model]["model"],image_address,CNNs[model]["preprocess_input"],\
                          CNNs[model]["decode_predictions"], save_path ,\
                          int(config["visualizers"][method]["perturbations"]),float(config["visualizers"][method]["kernel_size"]),\
                          float(config["visualizers"][method]["max_dist"]), float(config["visualizers"][method]["ratio"]))
                 case 'gradCAM':
-                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],secure_filename(model+"-"+method+"-"+config["filename"]))
+                    save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],filename)
                     GRADCAM(CNNs[model]["model"], CNNs[model]["last_conv_layer_name"],image_address,\
                             float(CNNs[model]["scale"]),CNNs[model]["preprocess_input"],\
                             CNNs[model]["decode_predictions"], save_path)
-            filenames.append(secure_filename(model+"-"+method+"-"+config["filename"]))
+            filenames.append(filename)
     return filenames
 
