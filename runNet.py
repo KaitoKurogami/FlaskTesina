@@ -14,7 +14,7 @@ def runNet(model,image,preprocessor, decoder):
 
     preds = model.predict(X,verbose=0)
     result = decode_predictions(preds)
-    txt="clase detectada: {classification}, con probabilidad: {probability:.2f}"
+
     for res in result[0]:
         print(f"clase detectada: {res[1]}, con probabilidad: {res[2]:.3%}")
         #print(txt.format(classification=res[1],probability=res[2]*100.0))

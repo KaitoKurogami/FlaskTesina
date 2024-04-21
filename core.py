@@ -8,8 +8,15 @@ from runNet import runNet
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import shap
+import json
 
 def core(config):
+
+    url = "https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json"
+    with open(shap.datasets.cache(url)) as file:
+        class_names_imagenet = [v[1] for v in json.load(file).values()]
+
     now = datetime.now()
     #make the image address to tell the CNNs where to find it
     filenames=[]
@@ -24,6 +31,7 @@ def core(config):
                 CNNs["VGG16"]["decode_predictions"]=vgg16decode_predictions
                 CNNs["VGG16"]["last_conv_layer_name"]="block5_conv3"
                 CNNs["VGG16"]["scale"]=224 / 14
+                CNNs["VGG16"]["class_names"]=class_names_imagenet
             case "ResNet50":
                 CNNs["ResNet50"]={}
                 CNNs["ResNet50"]["model"]=app.config["resnet50"]
@@ -31,6 +39,23 @@ def core(config):
                 CNNs["ResNet50"]["decode_predictions"]=ResNet50decode_predictions
                 CNNs["ResNet50"]["last_conv_layer_name"]="conv5_block3_out"
                 CNNs["ResNet50"]["scale"]=224 / 7
+                CNNs["ResNet50"]["class_names"]=class_names_imagenet
+            case "Otra":
+                def my_decode_predictions(preds, top=2,class_list=app.config["classes"]):
+                    # Obtener las principales predicciones
+                    top_indices = preds.argsort()[::-1][:top]
+                    
+                    # Decodificar las predicciones utilizando la lista de nombres de clases proporcionada
+                    decoded_preds = [[(index, class_list[index], preds.tolist()[0][index]) for index in top_indices[0].tolist()]]
+                    
+                    return decoded_preds
+                CNNs["Otra"]={}
+                CNNs["Otra"]["model"]=app.config["Otra"]
+                CNNs["Otra"]["preprocess_input"]=vgg16preprocess_input
+                CNNs["Otra"]["decode_predictions"]=my_decode_predictions
+                CNNs["Otra"]["last_conv_layer_name"]="vgg16"
+                CNNs["Otra"]["scale"]=224 / 7
+                CNNs["Otra"]["class_names"]=app.config["classes"]
     #here it iterates for each model
     #then it iterates for each visualization method, so first you process VGG wqith every method, then ResNet with everry method, etc.
     for model in config["models"]:
@@ -47,7 +72,7 @@ def core(config):
                 case 'shap':
                     save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],filename)
                     SHAP(CNNs[model]["model"],image_address,CNNs[model]["preprocess_input"],\
-                         CNNs[model]["decode_predictions"], save_path ,\
+                         CNNs[model]["decode_predictions"], save_path, CNNs[model]["class_names"],\
                          int(config["visualizers"][method]["evals"]),int(config["visualizers"][method]["batch_size"]))
                 case 'lime':
                     save_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['RESULT_FOLDER'],filename)

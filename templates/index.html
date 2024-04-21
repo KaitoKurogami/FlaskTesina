@@ -5,17 +5,20 @@
 {% endblock %}
 
 {% block body %}
+<div class="container">
 <div class="content" >
-    <h1></h1>
+    <h1 class="bg-primary text-light">Soporte de Decisiones</h1>
     <form method='POST' enctype="multipart/form-data" id="fullForm" onSubmit="showProcessing()">
         {{form.hidden_tag()}}
-        <h2>Imagen a procesar</h2>
-        <p>Obligatoria, solo archivos  'jpeg', 'jpg', 'png' o 'webp'</p>
-        {{form.file()}}
-        <h2>Redes neuronales</h2>
+        <h4 class="bg-primary-subtle text-primary-emphasis">Imagen a procesar</h4>
+        {{form.file(id="file")}}
+        <img id="selectedImage" src="#" alt="Selected Image" style="display:none; max-width: 300px; max-height: 300px;">
+        <h4 class="bg-primary-subtle text-primary-emphasis">Redes neuronales</h4>
         <p>Elija al menos una</p>
         {{form.nets()}}
-        <h2>Metodos de visualizacion</h2>
+        {{form.newNet(id="newNet")}}
+        {{form.classesText()}}
+        <h4 class="bg-primary-subtle text-primary-emphasis">Métodos de visualizacion</h4>
         <p>Elija al menos uno</p>
         <label for="toggleCheckbox">SHAP</label>
         <input name="check-SHAP" value="0" type="checkbox" id="toggleCheckboxSHAP" class="checkbox">
@@ -32,16 +35,16 @@
         <label for="toggleCheckbox">Grad-CAM</label>
         <input name="check-GradCAM" value="0" type="checkbox" id="toggleCheckboxGradCAM" class="checkbox">
         <div id="hiddenFormGradCAM">
-            <h4>Grad-CAM no tiene parametros modificables, con seleccionarlo alcanza</h4>
+            <b>Grad-CAM no tiene parametros modificables, con seleccionarlo alcanza</b>
         </div><br>
         {{form.submit()}}
     </form>
     <div id="processingMessage" style="display:none;">
         <p>Procesando... puede tardar mucho...</p>
     </div>
-
+</div>
 <script>
-    
+
     document.getElementById('toggleCheckboxSHAP').addEventListener('change', function () {
         var hiddenForm = document.getElementById('hiddenFormSHAP');
        
@@ -67,10 +70,40 @@
         }
     });
 
-
-    
     var checkboxes = document.getElementsByClassName('checkbox');
     var checkboxnets = document.getElementsByClassName('checkboxNets');
+
+    checkboxnets[checkboxnets.length-1].addEventListener('change', function () {
+            var hiddenForm = document.getElementById('newNet');
+
+            inputFields=hiddenForm.getElementsByTagName('input');
+            for (var i = 0; i < inputFields.length; i++){
+                inputFields[i].disabled=!this.checked;
+                if(this.checked){
+                    inputFields[i].setAttribute("required","required");
+                }else{
+                    inputFields[i].removeAttribute("required");
+                }
+            };
+
+            var hiddenForm2 = document.getElementById('classesText');
+
+            inputFields2=hiddenForm2.getElementsByTagName('textArea');
+            for (var i = 0; i < inputFields2.length; i++){
+                inputFields2[i].disabled=!this.checked;
+                if(this.checked){
+                    inputFields2[i].setAttribute("required","required");
+                }else{
+                    inputFields2[i].removeAttribute("required");
+                }
+            };
+
+            gradCAMCheck=document.getElementById('toggleCheckboxGradCAM');
+            gradCAMCheck.disabled=this.checked;
+            gradCAMCheck.checked=false;
+
+            });
+
     var submitButton = document.getElementById('submit');
     for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].addEventListener('change', updateSubmitButton);
@@ -105,6 +138,19 @@
         document.getElementById("processingMessage").style.display='block'
 
     }
-
+    function showSelectedImage(input) {
+        var file = input.files[0];
+        var reader = new FileReader();
+        console.log("Archivo seleccionado:", file.name);
+        reader.onload = function(e) {
+            var img = document.getElementById("selectedImage");
+            img.src = e.target.result;
+            img.style.display = "block";
+        }
+        reader.readAsDataURL(file);
+    }
+    document.getElementById("file-file").addEventListener("change", function() {
+        showSelectedImage(this);
+    });
 </script>
 {% endblock %}
