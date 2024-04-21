@@ -3,6 +3,8 @@ from wtforms import FileField, SubmitField, widgets,SelectMultipleField,IntegerF
 from wtforms.validators import InputRequired, DataRequired
 from flask_wtf.file import FileAllowed
 import decimal
+from wtforms.fields import TextAreaField
+from wtforms.widgets import TextArea
 
 class BetterDecimalField(DecimalField):
     """
@@ -33,8 +35,14 @@ class BetterDecimalField(DecimalField):
                 raise ValueError(self.gettext('Not a valid decimal value'))
 
 class UploadFileForm(FlaskForm):
-    file = FileField(label="File", validators=[InputRequired(),FileAllowed(['jpg', 'jpeg', 'png','webp'])])
+    file = FileField(label="Imagen, 'jpeg', 'jpg', 'png' o 'webp'", validators=[InputRequired(),FileAllowed(['jpg', 'jpeg', 'png','webp'])])
     #submit = SubmitField("Confirm File")
+
+class UploadNetForm(FlaskForm):
+    newNet = FileField(label="Otra Red, 'h5'", validators=[FileAllowed(['h5'])],render_kw={'disabled':'true'})
+
+class ClassesForm(FlaskForm):
+    classesText = TextAreaField(label="clases: separadas por coma",render_kw={'disabled':'true',"rows": 4, "cols": 30})
 
 class SHAPForm(FlaskForm):
     SHAP_evals=IntegerField("Evaluations",description="1000 por defecto",default=1000, validators=[DataRequired()],render_kw={'disabled':'true'})
@@ -51,12 +59,14 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 class FullForm(FlaskForm):
-    string_of_nets = ['VGG16\r\nResNet50\r\n']
+    string_of_nets = ['VGG16\r\nResNet50\r\nOtra\r\n']
     list_of_nets = string_of_nets[0].split()
     # create a list of value/description tuples
     nets = [(x, x) for x in list_of_nets]
     nets = MultiCheckboxField(label='nets', choices=nets,render_kw={'class':'checkboxNets'})
     file = FormField(UploadFileForm)
+    newNet = FormField(UploadNetForm)
     shap = FormField(SHAPForm)
     lime = FormField(LIMEForm)
+    classesText = FormField(ClassesForm)
     submit=SubmitField(label="Procesar Imagen",render_kw={'disabled':'true'})

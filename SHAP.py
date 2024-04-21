@@ -9,7 +9,7 @@ import warnings
 plt.axis('off')
 import cv2
 
-def SHAP(model,image,preprocessor,decoder, savefile_path ,SHAP_max_evals=1000,SHAP_batch_size=50):
+def SHAP(model,image,preprocessor,decoder, savefile_path,class_names ,SHAP_max_evals=1000,SHAP_batch_size=50):
 
 #preprocess image
   img = image
@@ -18,11 +18,9 @@ def SHAP(model,image,preprocessor,decoder, savefile_path ,SHAP_max_evals=1000,SH
   img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
   warnings.filterwarnings("ignore")
 
-
-
-  url = "https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json"
-  with open(shap.datasets.cache(url)) as file:
-      class_names = [v[1] for v in json.load(file).values()]
+  #url = "https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json"
+  #with open(shap.datasets.cache(url)) as file:
+  #    class_names = [v[1] for v in json.load(file).values()]
 
   X = np.expand_dims(img, axis=0).astype(np.float32)
   Xi=copy.deepcopy(X).astype(int)

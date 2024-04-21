@@ -18,6 +18,12 @@ except FileExistsError:
    # directory already exists
    pass
 
+try:
+   os.makedirs("./static/files/models")
+except FileExistsError:
+   # directory already exists
+   pass
+
 #for some reason, conda couldn find the SSL certificate in a new VM, if you dont have this problem, just comment the next to lines to feel safer
 import ssl
 ssl.create_default_https_context = ssl._create_unverified_context
@@ -33,18 +39,19 @@ app.config['RESULT_FOLDER'] = 'static/files/results'
 app.config['vgg16']= tf.keras.applications.vgg16.VGG16(weights="imagenet")
 app.config['resnet50']= tf.keras.applications.resnet50.ResNet50(weights="imagenet")
 
-
 @app.route('/',methods=('GET','POST'))
 def index():
     form = FullForm()
     if request.method=='POST':
         if form.validate_on_submit():
             file = request.files["file-file"] #grab the file
+            if "Otra" in request.form.getlist('nets'):
+                app.config['classes']=request.form.get("classesText-classesText").split(",")
+                app.config['Otra']= tf.keras.models.load_model(app.config['UPLOAD_FOLDER']+"/models/"+request.files["newNet-newNet"].filename,compile=False)
             configurationCore = preprocesor(request.form,file.filename) #create te dictionary with the configuration for the app
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) #save the file
             filenames=core(configurationCore)
             session['filenames']=filenames
-            flash("Procesamiento completado, imagenes guardadas en la carpeta "+app.config['RESULT_FOLDER'])
             return redirect('/results')
         
     return render_template('index.html',form=form)

@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block body %}
+<div class="container">
 <div class="content" >
-    <h1>Resultados</h1>
+    <h1 class="bg-primary text-light">Resultados</h1>
     <table id="listWithHandle">
         <tr>
             <th>Archivo: red-metodo-imagen</th>
@@ -24,7 +25,7 @@
         <button>
             <a href="{{url_for('index')}}">Volver</a></button>
     </div>
-
+</div>
 <script>
 function goBack() {
   window.history.back();
