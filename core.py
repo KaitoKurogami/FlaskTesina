@@ -40,7 +40,7 @@ def core(config):
                 CNNs["ResNet50"]["last_conv_layer_name"]="conv5_block3_out"
                 CNNs["ResNet50"]["scale"]=224 / 7
                 CNNs["ResNet50"]["class_names"]=class_names_imagenet
-            case "Otra":
+            case "Red propia":
                 def my_decode_predictions(preds, top=2,class_list=app.config["classes"]):
                     # Obtener las principales predicciones
                     top_indices = preds.argsort()[::-1][:top]
@@ -49,13 +49,13 @@ def core(config):
                     decoded_preds = [[(index, class_list[index], preds.tolist()[0][index]) for index in top_indices[0].tolist()]]
                     
                     return decoded_preds
-                CNNs["Otra"]={}
-                CNNs["Otra"]["model"]=app.config["Otra"]
-                CNNs["Otra"]["preprocess_input"]=vgg16preprocess_input
-                CNNs["Otra"]["decode_predictions"]=my_decode_predictions
-                CNNs["Otra"]["last_conv_layer_name"]="vgg16"
-                CNNs["Otra"]["scale"]=224 / 7
-                CNNs["Otra"]["class_names"]=app.config["classes"]
+                CNNs["Red propia"]={}
+                CNNs["Red propia"]["model"]=app.config["Red propia"]
+                CNNs["Red propia"]["preprocess_input"]=vgg16preprocess_input
+                CNNs["Red propia"]["decode_predictions"]=my_decode_predictions
+                CNNs["Red propia"]["last_conv_layer_name"]="vgg16"
+                CNNs["Red propia"]["scale"]=224 / 7
+                CNNs["Red propia"]["class_names"]=app.config["classes"]
     #here it iterates for each model
     #then it iterates for each visualization method, so first you process VGG wqith every method, then ResNet with everry method, etc.
     for model in config["models"]:

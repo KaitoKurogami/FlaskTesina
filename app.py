@@ -45,9 +45,9 @@ def index():
     if request.method=='POST':
         if form.validate_on_submit():
             file = request.files["file-file"] #grab the file
-            if "Otra" in request.form.getlist('nets'):
+            if "Red propia" in request.form.getlist('nets'):
                 app.config['classes']=request.form.get("classesText-classesText").split(",")
-                app.config['Otra']= tf.keras.models.load_model(app.config['UPLOAD_FOLDER']+"/models/"+request.files["newNet-newNet"].filename,compile=False)
+                app.config['Red propia']= tf.keras.models.load_model(app.config['UPLOAD_FOLDER']+"/models/"+request.files["newNet-newNet"].filename,compile=False)
             configurationCore = preprocesor(request.form,file.filename) #create te dictionary with the configuration for the app
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) #save the file
             filenames=core(configurationCore)
